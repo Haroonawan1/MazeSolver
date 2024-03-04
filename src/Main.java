@@ -11,28 +11,33 @@ public class Main {
 
     public static String findPath(String[][] mapData) {
         ArrayList<String> coordinates = new ArrayList<>();
+        coordinates.add("(0, 0)");
+        coordinates.add("(0, 1)");
         int r = 0;
-        int c = 0;
-        while (r != mapData.length - 1 && c != mapData[0].length - 1) {
-            if (r + 1 != mapData.length && r + 1 != Integer.parseInt(coordinates.get(coordinates.size() - 2).substring(1, 2)) && mapData[r + 1][c].equals(".")) {
+        int c = 1;
+        while (r != mapData.length - 1 || c != mapData[0].length - 1) {
+            if (r + 1 < mapData.length && !("(" + (r + 1) + ", " + c + ")").equals(coordinates.get(coordinates.size() - 2)) && mapData[r + 1][c].equals(".")) {
                 r++;
                 coordinates.add("(" + r + ", " + c + ")");
             }
-            else if (r - 1 >= 0 && r - 1 != Integer.parseInt(coordinates.get(coordinates.size() - 2).substring(1, 2)) && mapData[r - 1][c].equals(".")) {
+            else if (r - 1 >= 0 && !("(" + (r - 1) + ", " + c + ")").equals(coordinates.get(coordinates.size() - 2)) && mapData[r - 1][c].equals(".")) {
                 r--;
                 coordinates.add("(" + r + ", " + c + ")");
             }
-            else if (c + 1 != mapData[0].length && c + 1 != Integer.parseInt(coordinates.get(coordinates.size() - 2).substring(4, 5)) &&  mapData[r][c + 1].equals(".")) {
+            else if (c + 1 < mapData[0].length && !("(" + r + ", " + (c + 1) + ")").equals(coordinates.get(coordinates.size() - 2)) && mapData[r][c + 1].equals(".")) {
                 c++;
                 coordinates.add("(" + r + ", " + c + ")");
             }
-            else if (c - 1 >= 0 && c - 1 != Integer.parseInt(coordinates.get(coordinates.size() - 2).substring(4, 5)) && mapData[r][c - 1].equals(".")) {
-                c++;
+            else if (c - 1 >= 0 && !("(" + r + ", " + (c - 1) + ")").equals(coordinates.get(coordinates.size() - 2)) && mapData[r][c - 1].equals(".")) {
+                c--;
                 coordinates.add("(" + r + ", " + c + ")");
             }
-            System.out.println(coordinates);
         }
-        return "hello";
+        String result = "(0, 0) -> ";
+        for (String coordinate : coordinates) {
+            result += coordinate + " -> ";
+        }
+        return result.substring(0, result.length() - 4);
     }
 
     public static String[][] getMaze(String fileName) {
