@@ -11,29 +11,38 @@ public class Main {
 
     public static String findPath(String[][] mapData) {
         ArrayList<String> coordinates = new ArrayList<>();
+        ArrayList<String> deadEnds = new ArrayList<>();
         coordinates.add("(0, 0)");
         coordinates.add("(0, 1)");
         int r = 0;
         int c = 1;
         while (r != mapData.length - 1 || c != mapData[0].length - 1) {
-            if (r + 1 < mapData.length && !("(" + (r + 1) + ", " + c + ")").equals(coordinates.get(coordinates.size() - 2)) && mapData[r + 1][c].equals(".")) {
+            if (r + 1 < mapData.length && !("(" + (r + 1) + ", " + c + ")").equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains("(" + (r + 1) + ", " + c + ")") && mapData[r + 1][c].equals(".")) {
                 r++;
                 coordinates.add("(" + r + ", " + c + ")");
             }
-            else if (r - 1 >= 0 && !("(" + (r - 1) + ", " + c + ")").equals(coordinates.get(coordinates.size() - 2)) && mapData[r - 1][c].equals(".")) {
+            else if (r - 1 >= 0 && !("(" + (r - 1) + ", " + c + ")").equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains("(" + (r - 1) + ", " + c + ")") && mapData[r - 1][c].equals(".")) {
                 r--;
                 coordinates.add("(" + r + ", " + c + ")");
             }
-            else if (c + 1 < mapData[0].length && !("(" + r + ", " + (c + 1) + ")").equals(coordinates.get(coordinates.size() - 2)) && mapData[r][c + 1].equals(".")) {
+            else if (c + 1 < mapData[0].length && !("(" + r + ", " + (c + 1) + ")").equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains("(" + r + ", " + (c + 1) + ")") && mapData[r][c + 1].equals(".")) {
                 c++;
                 coordinates.add("(" + r + ", " + c + ")");
             }
-            else if (c - 1 >= 0 && !("(" + r + ", " + (c - 1) + ")").equals(coordinates.get(coordinates.size() - 2)) && mapData[r][c - 1].equals(".")) {
+            else if (c - 1 >= 0 && !("(" + r + ", " + (c - 1) + ")").equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains("(" + r + ", " + (c - 1) + ")") && mapData[r][c - 1].equals(".")) {
                 c--;
                 coordinates.add("(" + r + ", " + c + ")");
             }
+            else {
+                deadEnds.add("(" + r + ", " + c + ")");
+                coordinates = new ArrayList<>();
+                coordinates.add("(0, 0)");
+                coordinates.add("(0, 1)");
+                r = 0;
+                c = 1;
+            }
         }
-        String result = "(0, 0) -> ";
+        String result = "";
         for (String coordinate : coordinates) {
             result += coordinate + " -> ";
         }
