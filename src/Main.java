@@ -12,10 +12,10 @@ public class Main {
     public static String findPath(String[][] mapData) {
         ArrayList<String> coordinates = new ArrayList<>();
         ArrayList<String> deadEnds = new ArrayList<>();
+        int r = (mapData[0][1].equals(".")) ? 0 : 1;
+        int c = (mapData[0][1].equals(".")) ? 1 : 0;
         coordinates.add("(0, 0)");
-        coordinates.add("(0, 1)");
-        int r = 0;
-        int c = 1;
+        coordinates.add("(" + r + ", " + c + ")");
         while (r != mapData.length - 1 || c != mapData[0].length - 1) {
             if (r + 1 < mapData.length && !("(" + (r + 1) + ", " + c + ")").equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains("(" + (r + 1) + ", " + c + ")") && mapData[r + 1][c].equals(".")) {
                 r++;
@@ -36,10 +36,10 @@ public class Main {
             else {
                 deadEnds.add("(" + r + ", " + c + ")");
                 coordinates = new ArrayList<>();
+                r = (mapData[0][1].equals(".")) ? 0 : 1;
+                c = (mapData[0][1].equals(".")) ? 1 : 0;
                 coordinates.add("(0, 0)");
-                coordinates.add("(0, 1)");
-                r = 0;
-                c = 1;
+                coordinates.add("(" + r + ", " + c + ")");
             }
         }
         String result = "";
