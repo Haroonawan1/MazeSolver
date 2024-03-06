@@ -1,3 +1,4 @@
+import javax.print.DocFlavor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -12,10 +13,10 @@ public class Main {
     public static String findPath(String[][] mapData) {
         ArrayList<String> coordinates = new ArrayList<>();
         ArrayList<String> deadEnds = new ArrayList<>();
-        int r = (mapData[0][1].equals(".")) ? 0 : 1;
-        int c = (mapData[0][1].equals(".")) ? 1 : 0;
+        int r = 0;
+        int c = 0;
         coordinates.add("(0, 0)");
-        coordinates.add("(" + r + ", " + c + ")");
+        coordinates.add("(0, 0)");
         while (r != mapData.length - 1 || c != mapData[0].length - 1) {
             if (r + 1 < mapData.length && !("(" + (r + 1) + ", " + c + ")").equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains("(" + (r + 1) + ", " + c + ")") && mapData[r + 1][c].equals(".")) {
                 r++;
@@ -36,15 +37,20 @@ public class Main {
             else {
                 deadEnds.add("(" + r + ", " + c + ")");
                 coordinates = new ArrayList<>();
-                r = (mapData[0][1].equals(".")) ? 0 : 1;
-                c = (mapData[0][1].equals(".")) ? 1 : 0;
+                r = 0;
+                c = 0;
                 coordinates.add("(0, 0)");
-                coordinates.add("(" + r + ", " + c + ")");
+                coordinates.add("(0, 0)");
             }
         }
         String result = "";
         for (String coordinate : coordinates) {
             result += coordinate + " -> ";
+        }
+        for (int i = result.length() - 1; i > 5; i--) {
+            if (result.startsWith("(0, 0)", i - 6)) {
+                result = result.substring(i - 6);
+            }
         }
         return result.substring(0, result.length() - 4);
     }
