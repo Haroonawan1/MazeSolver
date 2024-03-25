@@ -5,8 +5,9 @@ import java.util.Scanner;
 
 public class MazeRunner {
     public static void main(String[] args) {
-        MazeSolver solver = new MazeSolver(getMaze("data/mapData"));
-        System.out.println(solver.findPath());
+        String[][] mapData = getMaze("data/mapData");
+        MazeSolver mazeSolver = new MazeSolver(mapData);
+        System.out.println(mazeSolver.findPath());
     }
 
     public static String[][] getMaze(String fileName) {

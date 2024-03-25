@@ -3,43 +3,67 @@ import java.util.Arrays;
 
 public class MazeSolver {
     private String[][] mapData;
+    private ArrayList<String> coordinates, deadEnds;
+    private int r, c;
 
     public MazeSolver(String[][] mapData) {
         this.mapData = mapData;
+        coordinates = new ArrayList<>(Arrays.asList("(0, 0)", "(0, 0)"));
+        deadEnds = new ArrayList<>();
+        r = c = 0;
     }
 
     public String findPath() {
-        ArrayList<String> coordinates = new ArrayList<>(Arrays.asList("(0, 0)", "(0, 0)"));
-        ArrayList<String> deadEnds = new ArrayList<>();
-        int r = 0;
-        int c = 0;
         while (r != mapData.length - 1 || c != mapData[0].length - 1) {
-            boolean south = checkDirection(r, c, r + 1, c, r + 1, mapData.length - 1, coordinates, deadEnds);
-            boolean north = checkDirection(r, c, r - 1, c, ((r - 1) * -1), 0, coordinates, deadEnds);
-            boolean east = checkDirection(r, c, r, c + 1, c + 1, mapData[0].length - 1, coordinates, deadEnds);
-            boolean west = checkDirection(r, c, r, c - 1, ((c - 1) * -1), 0, coordinates, deadEnds);
-            coordinates = (!south && !north && !east && !west) ? new ArrayList<>(Arrays.asList("(0, 0)", "(0, 0)")) : coordinates;
-            r = (!south && !north && !east && !west) ? 0 : r;
-            c = (!south && !north && !east && !west) ? 0 : c;
+            if(!(checkSouth() || checkNorth() || checkEast() || checkWest())) {
+                deadEnd();
+            }
+            else {
+                coordinates.add("(" + r + ", " + c + ")");
+            }
         }
-        return formatArrayList(coordinates);
+        return formatString();
     }
 
-    public boolean checkDirection(int r, int c, int rDelta, int cDelta, int compared, int bound, ArrayList<String> coordinates, ArrayList<String> deadEnds){
-        String nextCoordinate = "(" + (r + rDelta) + ", " + (c + cDelta) + ")";
-        if (compared <= bound && !(nextCoordinate).equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains(nextCoordinate) && mapData[r + rDelta][c + cDelta].equals(".")) {
-            r += rDelta;
-            c += cDelta;
-            coordinates.add("(" + r + ", " + c + ")");
+    public boolean checkSouth() {
+        if (r + 1 < mapData.length && !("(" + (r + 1) + ", " + c + ")").equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains("(" + (r + 1) + ", " + c + ")") && mapData[r + 1][c].equals(".")) {
+            r++;
+            return true;
         }
-        else {
-            deadEnds.add("(" + r + ", " + c + ")");
-            return false;
-        }
-        return true;
+        return false;
     }
 
-    public String formatArrayList(ArrayList<String> coordinates) {
+    public boolean checkNorth() {
+        if (r - 1 >= 0 && !("(" + (r - 1) + ", " + c + ")").equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains("(" + (r - 1) + ", " + c + ")") && mapData[r - 1][c].equals(".")) {
+            r--;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkEast() {
+        if (c + 1 < mapData[0].length && !("(" + r + ", " + (c + 1) + ")").equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains("(" + r + ", " + (c + 1) + ")") && mapData[r][c + 1].equals(".")) {
+            c++;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkWest() {
+        if (c - 1 >= 0 && !("(" + r + ", " + (c - 1) + ")").equals(coordinates.get(coordinates.size() - 2)) && !deadEnds.contains("(" + r + ", " + (c - 1) + ")") && mapData[r][c - 1].equals(".")) {
+            c--;
+            return true;
+        }
+        return false;
+    }
+
+    public void deadEnd() {
+        deadEnds.add("(" + r + ", " + c + ")");
+        coordinates = new ArrayList<>(Arrays.asList("(0, 0)", "(0, 0)"));
+        r = c = 0;
+    }
+
+    public String formatString() {
         String result = "";
         for (String coordinate : coordinates) {
             result += coordinate + " -> ";
